@@ -9,6 +9,26 @@ import matplotlib.pyplot as plt
 
 from PIL import Image
 
+from gpt_call import OpenAi
+from yahoo_call import YahooCall
+
+yahoo = YahooCall()
+openai = OpenAi()
+
+def scrape(Comodity="SILVER"):
+    articles = yahoo.call(market=Comodity)
+    return articles
+
+def summarize(articles):
+    summarized = [openai.sum_call(article) for article in articles]
+    return summarized
+
+def sentiment(summarized):
+    sentiments = []
+    for summary in summarized:
+        summary = f'summary: {summary}\nsentiment: '
+        sentiment.append(openai.sent_call(summary))
+    return sentiments
 
 st.set_page_config(page_title='Comodities Sentiment with GPT-3 by Finance Gurus')
 
@@ -19,6 +39,19 @@ st.write("""
 izbira_polja = ['Gold', 'Silver']
 izbira = st.sidebar.selectbox("Select a comodity", izbira_polja, 0)
 #returns the selection (0 or 1)
+
+commodity = 'GOLD' if izbira == 0 else 'SILVER'
+
+scraped = scrape(commodity)
+print(len(scraped))
+summarized = summarize(scraped)
+sentiments = sentiment(summarized)
+
+for artice in summarized:
+    st.write(f'article summary: {artice}')
+
+for sentiment in sentiments:
+    st.write(f'article sentiment: {sentiment}')
 
 st.write('Choice: ', izbira)
 
