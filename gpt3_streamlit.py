@@ -20,14 +20,14 @@ def scrape(Comodity="SILVER"):
     return articles
 
 def summarize(articles):
-    summarized = [openai.sum_call(article) for article in articles]
+    summarized = [openai.sum_call(article)['choices'][0]['text'] for article in articles]
     return summarized
 
 def sentiment(summarized):
     sentiments = []
     for summary in summarized:
         summary = f'summary: {summary}\nsentiment: '
-        sentiment.append(openai.sent_call(summary))
+        sentiments.append(openai.sent_call(summary))
     return sentiments
 
 st.set_page_config(page_title='Comodities Sentiment with GPT-3 by Finance Gurus')
@@ -43,9 +43,10 @@ izbira = st.sidebar.selectbox("Select a comodity", izbira_polja, 0)
 commodity = 'GOLD' if izbira == 0 else 'SILVER'
 
 scraped = scrape(commodity)
-print(len(scraped))
 summarized = summarize(scraped)
-sentiments = sentiment(summarized)
+summaries = '#'.join(summarized)
+sentiments = sentiment(summaries)
+
 
 for artice in summarized:
     st.write(f'article summary: {artice}')

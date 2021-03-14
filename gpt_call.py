@@ -1,5 +1,6 @@
 import os
 import openai
+import json
 
 class OpenAi():
 
@@ -14,7 +15,7 @@ class OpenAi():
 
         openai.api_key = self.token
     
-    def sum_call(prompt):
+    def sum_call(self, prompt):
         response = openai.Completion.create(
         engine=self.engine,
         prompt=prompt,
@@ -24,9 +25,9 @@ class OpenAi():
         frequency_penalty=self.frequency_penalty,
         presence_penalty=self.presence_penalty)
 
-        return response.replace('\n', '').split().join(' ')
+        return response
 
-    def sent_call(prompt):
+    def sent_call(self, prompt):
         response = openai.Completion.create(
         engine=self.engine,
         prompt=prompt,
